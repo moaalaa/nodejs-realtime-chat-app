@@ -47,14 +47,19 @@ io.on('connection', socket => {
 
 
     // listen Create Message
-    socket.on('create_message', (message) => {
+    socket.on('create_message', (message, callback) => {
         console.log('Create Message', message);
         
         // Broadcast To All Sockets
         io.emit('new_message', generateMessage(message.from, message.text));
 
+        // Event Acknowledgements for current socket only
+        callback('This Is From Server.');
+
         // Broadcast To All Sockets Except The Current / Fired Event Socket
         // socket.broadcast.emit('new_message', message);
+
+
     });
 
     socket.emit('new_message', generateMessage('Alaa', 'Hay') )

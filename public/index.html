@@ -2,16 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Hello</title>
+    <title>Chat App</title>
+    <link rel="stylesheet" href="/assets/css/bulma.min.css">
 </head>
 <body>
-    <h1>Hello, World</h1>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Welcome to Chat App</h1>
+
+            <ol id="messages"></ol>
+
+            <form id="message-form">
+                
+                <div class="field">
+                    <div class="control">
+                
+                        <input type="text" class="message-input input" name="message" placeholder="Write Your Message"/>
+
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="control">
+
+                        <button class="send button is-primary" type="submit">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
 
     <script src="/socket.io/socket.io.js"></script>
-    
-    <script src="./assets/js/app.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/app.js"></script>
 
 </body>
 </html>
