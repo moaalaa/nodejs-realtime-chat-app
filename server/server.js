@@ -1,7 +1,7 @@
 // Modules                                  
 const path = require('path');
 const http = require('http');
-const socketIO = require('socket.io')
+const socketIO = require('socket.io');
 const express = require('express');
 const bodyParser = require('body-parser');
 require('express-group-routes');
@@ -31,9 +31,18 @@ server.listen(port, () => console.log(`Server Started on Port ${port}`));
 
 // Socket.io Connections
 io.on('connection', socket => {
-    console.log('New User Connected', socket.client.id);
+    console.log('New Client Connected', socket.client.id);
 
     socket.on('disconnect', () => {
         console.log("Client Disconnected", socket.client.id);
     });
+
+    // listen Create Message
+    socket.on('create_message', (message) => {
+        console.log('Create Message', message);
+    });
+
+    socket.emit('new_message', {from: 'Alaa', text: "Hay", createdAt: 123123})
+
+
 })
