@@ -4,6 +4,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const express = require('express');
 const bodyParser = require('body-parser');
+const {generateMessage} = require('./utils/message');
 require('express-group-routes');
 
 // Public Path
@@ -39,18 +40,10 @@ io.on('connection', socket => {
 
 
     // Broadcast To All Sockets
-    io.emit('new_message', {
-        from: 'Admin',
-        text: 'Welcome To Chat App',
-        createdAt: new Date().getTime()
-    });
+    io.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
 
     // Broadcast To All Sockets Except The Current / Fired Event Socket
-    socket.broadcast.emit('new_message', {
-        from: 'Admin',
-        text: 'New User Joined',
-        createdAt: new Date().getTime()
-    });
+    socket.broadcast.emit('new_message', generateMessage('Admin', 'New User Joined'));
 
 
     // listen Create Message
@@ -58,17 +51,13 @@ io.on('connection', socket => {
         console.log('Create Message', message);
         
         // Broadcast To All Sockets
-        io.emit('new_message', message);
+        io.emit('new_message', generateMessage(message.from, message.text));
 
         // Broadcast To All Sockets Except The Current / Fired Event Socket
         // socket.broadcast.emit('new_message', message);
     });
 
-    socket.emit('new_message', {
-        from: 'Alaa',
-        text: "Hay",
-        createdAt: new Date().getTime()
-    })
+    socket.emit('new_message', generateMessage('Alaa', 'Hay') )
 
 
 })
