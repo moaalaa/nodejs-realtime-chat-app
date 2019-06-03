@@ -32,17 +32,43 @@ server.listen(port, () => console.log(`Server Started on Port ${port}`));
 // Socket.io Connections
 io.on('connection', socket => {
     console.log('New Client Connected', socket.client.id);
-
+    
     socket.on('disconnect', () => {
         console.log("Client Disconnected", socket.client.id);
     });
 
+
+    // Broadcast To All Sockets
+    io.emit('new_message', {
+        from: 'Admin',
+        text: 'Welcome To Chat App',
+        createdAt: new Date().getTime()
+    });
+
+    // Broadcast To All Sockets Except The Current / Fired Event Socket
+    socket.broadcast.emit('new_message', {
+        from: 'Admin',
+        text: 'New User Joined',
+        createdAt: new Date().getTime()
+    });
+
+
     // listen Create Message
     socket.on('create_message', (message) => {
         console.log('Create Message', message);
+        
+        // Broadcast To All Sockets
+        io.emit('new_message', message);
+
+        // Broadcast To All Sockets Except The Current / Fired Event Socket
+        // socket.broadcast.emit('new_message', message);
     });
 
-    socket.emit('new_message', {from: 'Alaa', text: "Hay", createdAt: 123123})
+    socket.emit('new_message', {
+        from: 'Alaa',
+        text: "Hay",
+        createdAt: new Date().getTime()
+    })
 
 
 })
