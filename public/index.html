@@ -5,37 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Chat App</title>
-    <link rel="stylesheet" href="/assets/css/bulma.min.css">
+    <link rel="stylesheet" href="/assets/css/app.min.css">
 </head>
-<body>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">Welcome to Chat App</h1>
+<body class="chat">
 
-            <ol id="messages"></ol>
+    <aside class="chat__sidebar">
+        <h3>Users</h3>
+        <div id="users"></div>
+    </aside>
 
+    <section class="chat__main">
+        <ol id="messages" class="chat__messages"></ol>
+
+        <div class="chat__footer">
             <form id="message-form">
-                
-                <div class="field">
-                    <div class="control">
-                        <input type="text" class="message-input input" name="message" placeholder="Write Your Message"/>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="control">
-                        <button class="send button is-primary" type="submit">Send</button>
-                        <button type="button" class="button is-info" id="send-location">Send Location</button>
-                    </div>
-                </div>
+                <input type="text" class="message-input" name="message" placeholder="Write Your Message"/>
+                <button class="send" type="submit">Send</button>
             </form>
-            
+    
+            <button type="button" id="send-location">Send Location</button>
         </div>
     </section>
 
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/moment.min.js"></script>
     <script src="/assets/js/app.js"></script>
 
 </body>

@@ -10,18 +10,20 @@ socket.on('disconnect', function () {
 
 // listen on new Message
 socket.on('new_message', function (message) {
+    var formatedTime = moment(message.createdAt).fromNow();
     var li = $('<li></li>');
-    li.text(`${message.from}: ${message.text}`);
+    li.text(`${message.from} ${formatedTime}: ${message.text}`);
 
     $('#messages').append(li);
 });
 
 // listen on new location Message
 socket.on('new_location_message', function (message) {
+    var formatedTime = moment(message.createdAt).fromNow();
     var li = $('<li></li>');
     var a = $('<a target="_blank">My Current Location</a>');
     
-    li.text(`${message.from}: `);
+    li.text(`${message.from} ${formatedTime}: `);
     a.attr('href', message.url);
     li.append(a);
     $('#messages').append(li);
@@ -32,7 +34,6 @@ $('#message-form').on('submit', function (e) {
     e.preventDefault();
     
     var input = $('input[name=message]');
-    $('.send').addClass('is-loading');
 
     // Emit New Message To Server
     socket.emit('create_message', {
@@ -40,8 +41,7 @@ $('#message-form').on('submit', function (e) {
         text: input.val(),
         createdAt: new Date().getTime()
     }, function (data) {
-        input.val('')
-        $('.send').removeClass('is-loading');
+        input.val('');
         console.log(data);
     });
 });
