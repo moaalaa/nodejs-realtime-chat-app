@@ -1,5 +1,24 @@
 const socket = io();
 
+function scrollToBottom() {
+    // Selectors
+    var messages = $('#messages');
+    var newMessage = messages.children('li:last-child');
+
+    // Heights
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+
+    // if message "scrollTop" and "clientHeight" and "innerHeight" and "prev message innerHeight" is greater than "scrollHeight"
+    // make message "scrollTop" equal "scrollHeight" 
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+        messages.scrollTop(scrollHeight);
+    }
+}
+
 socket.on('connect', function () {
     console.log('Connected To Server');
 });
@@ -17,6 +36,8 @@ socket.on('new_message', function (message) {
     });
 
     $('#messages').append(html);
+    
+    scrollToBottom();
 });
 
 // listen on new location Message
@@ -29,7 +50,7 @@ socket.on('new_location_message', function (message) {
     });
 
     $('#messages').append(html);
-
+    scrollToBottom();
 });
 
 // New Message Form
