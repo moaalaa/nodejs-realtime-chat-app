@@ -4,7 +4,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const express = require('express');
 const bodyParser = require('body-parser');
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 require('express-group-routes');
 
 // Public Path
@@ -34,9 +34,7 @@ server.listen(port, () => console.log(`Server Started on Port ${port}`));
 io.on('connection', socket => {
     console.log('New Client Connected', socket.client.id);
     
-    socket.on('disconnect', () => {
-        console.log("Client Disconnected", socket.client.id);
-    });
+    socket.on('disconnect', () => console.log("Client Disconnected", socket.client.id) );
 
 
     // Broadcast To All Sockets
@@ -58,11 +56,23 @@ io.on('connection', socket => {
 
         // Broadcast To All Sockets Except The Current / Fired Event Socket
         // socket.broadcast.emit('new_message', message);
-
-
     });
 
-    socket.emit('new_message', generateMessage('Alaa', 'Hay') )
+    socket.on('create_location_message', coords => {
+        io.emit('new_location_message', generateLocationMessage("Alaa", coords.latitude, coords.longitude))
+    })
+
+
+    // Emit / Broadcast Types
+
+    // Broadcast To All Sockets
+    // io.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
+
+    // Broadcast for current socket only
+    // socket.emit('new_message', generateMessage('Alaa', 'Hay') )
+    
+    // Broadcast To All Sockets Except The Current Socket
+    // socket.broadcast.emit('new_message', generateMessage('Admin', 'New User Joined'));
 
 
 })
