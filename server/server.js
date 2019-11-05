@@ -38,15 +38,32 @@ io.on('connection', socket => {
 
 
     // Broadcast To All Sockets
-    io.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
+    // io.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
+    
+    // Broadcast To current socket
+    // socket.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
 
     // Broadcast To All Sockets Except The Current / Fired Event Socket
-    socket.broadcast.emit('new_message', generateMessage('Admin', 'New User Joined'));
+    // socket.broadcast.emit('new_message', generateMessage('Admin', 'New User Joined'));
 
     socket.on('join', (params, callback) => {
         if (! isRealString(params.name) || ! isRealString(params.room_name)) {
             callback('name and room name are required');
         }
+
+        // Join a room by default on connection "socket" join a "room" it's name be "socket" id
+        socket.join(params.room_name);
+        
+        // Leave a room
+        // socket.leave(params.room_name);
+
+
+        
+        // Broadcast To current socket in room
+        socket.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
+
+        // Broadcast To All Sockets Except The Current / Fired Event Socket in room
+        socket.broadcast.to(params.room_name).emit('new_message', generateMessage('Admin', `${params.name} Joined`));
 
         callback();
     });
@@ -71,6 +88,7 @@ io.on('connection', socket => {
 
 
     // Emit / Broadcast Types
+    // This Works to send to all users and not to specific room so it's not private chat as we can say
 
     // Broadcast To All Sockets
     // io.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
@@ -80,6 +98,18 @@ io.on('connection', socket => {
     
     // Broadcast To All Sockets Except The Current Socket
     // socket.broadcast.emit('new_message', generateMessage('Admin', 'New User Joined'));
+
+    // Emit / Broadcast Types Private
+    // just chain "to()" before any emit and it will make the message private for specified "room" only 
+
+    // Broadcast To All Sockets in a specific room
+    // io.to("room_name").emit('new_message', generateMessage('Admin','Welcome To Chat App'));
+
+    // Broadcast for current socket only in a specific room but not sense to specify a room because it will broadcast for current "socket"
+    // socket.to("room_name").emit('new_message', generateMessage('Alaa', 'Hay') )
+    
+    // Broadcast To All Sockets Except The Current Socket in a specific room
+    // socket.broadcast.to("room_name").emit('new_message', generateMessage('Admin', 'New User Joined'));
 
 
 })
