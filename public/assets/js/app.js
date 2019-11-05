@@ -21,6 +21,19 @@ function scrollToBottom() {
 
 socket.on('connect', function () {
     console.log('Connected To Server');
+
+    var params = $.deparam(window.location.search);
+
+    // "emit" takes args... after first params but if last param is function it will be acknowledgment
+    socket.emit('join', params, function (err) {
+        if (err) {
+            alert(err);
+            window.location.href = '/';
+        } else {
+            console.log('no errors');
+        }
+    });
+    
 });
 
 socket.on('disconnect', function () {

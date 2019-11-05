@@ -5,6 +5,7 @@ const socketIO = require('socket.io');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
 require('express-group-routes');
 
 // Public Path
@@ -29,7 +30,6 @@ let port = process.env.PORT || 3000;
 // Start Http Server
 server.listen(port, () => console.log(`Server Started on Port ${port}`));
 
-
 // Socket.io Connections
 io.on('connection', socket => {
     console.log('New Client Connected', socket.client.id);
@@ -43,6 +43,13 @@ io.on('connection', socket => {
     // Broadcast To All Sockets Except The Current / Fired Event Socket
     socket.broadcast.emit('new_message', generateMessage('Admin', 'New User Joined'));
 
+    socket.on('join', (params, callback) => {
+        if (! isRealString(params.name) || ! isRealString(params.room_name)) {
+            callback('name and room name are required');
+        }
+
+        callback();
+    });
 
     // listen Create Message
     socket.on('create_message', (message, callback) => {

@@ -16,23 +16,16 @@
             </div>
             <div class="form-field">
                 <label for="display-name">Display Name</label>
-                <input type="text" id="display-name" name="name" placeholder="Write Your Name" autofocus />
+                <input type="text" id="display-name" name="name" placeholder="Write Your Name" autofocus required/>
             </div>
             <div class="form-field">
                 <label for="room-name">Room Name</label>
-                <input type="text" id="room-name" name="room-name" placeholder="Write Room Name" />
+                <input type="text" id="room-name" name="room_name" placeholder="Write Room Name" required/>
             </div>
             <div class="form-field">
                 <button type="submit">Join</button>
             </div>
         </form>
     </div>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/moment.min.js"></script>
-    <script src="/assets/js/mustache.min.js"></script>
-    <script src="/assets/js/app.js"></script>
-
 </body>
 </html>
