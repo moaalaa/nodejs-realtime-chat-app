@@ -2,7 +2,7 @@ const expect = require('expect.js');
 
 const {generateMessage, generateLocationMessage} = require('./message');
 
-describe('Generate New Message', () => {
+describe('Generate New Messages Tests', () => {
     it('should generate new message with user name and message text', () => {
         let from        = 'Alaa';
         let text        = 'Test New Message';
