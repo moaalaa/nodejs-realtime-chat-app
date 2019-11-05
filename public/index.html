@@ -4,59 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chat App</title>
+    <title>Join Us</title>
     <link rel="stylesheet" href="/assets/css/app.min.css">
 </head>
-<body class="chat">
+<body class="centered-form">
 
-    <aside class="chat__sidebar">
-        <h3>Users</h3>
-        <div id="users"></div>
-    </aside>
-
-    <section class="chat__main">
-        <ol id="messages" class="chat__messages"></ol>
-
-        <div class="chat__footer">
-            <form id="message-form">
-                <input type="text" class="message-input" name="message" placeholder="Write Your Message"/>
-                <button class="send" type="submit">Send</button>
-            </form>
-    
-            <button type="button" id="send-location">Send Location</button>
-        </div>
-    </section>
-
-
-    <!-- Templates -->
-    
-    <!-- Message Template -->
-    <script id="message-template" type="text/template">
-        <li class="message">
-            <div class="message__title">
-                <h4>{{ from }}</h4>
-                <span>{{ createdAt }}</span>
+    <div class="centered-form__form">
+        <form action="/chat.html" method="GET">
+            <div class="form-field">
+                <h3>Join Our Chat</h3>
             </div>
-            <div class="message__body">
-                <p>{{ text }}</p>
+            <div class="form-field">
+                <label for="display-name">Display Name</label>
+                <input type="text" id="display-name" name="name" placeholder="Write Your Name" autofocus />
             </div>
-        </li>
-    </script>
-
-    <!-- Location Message Template  -->
-    <script id="location-message-template" type="text/template">
-        <li class="message">
-            <div class="message__title">
-                <h4>{{ from }}</h4>
-                <span>{{ createdAt }}</span>
+            <div class="form-field">
+                <label for="room-name">Room Name</label>
+                <input type="text" id="room-name" name="room-name" placeholder="Write Room Name" />
             </div>
-            <div class="message__body">
-                <p>
-                    <a href="{{ url }}" target="_blank">My Current Location</a>
-                </p>
+            <div class="form-field">
+                <button type="submit">Join</button>
             </div>
-        </li>
-    </script>
+        </form>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/js/jquery.min.js"></script>
