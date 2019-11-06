@@ -59,7 +59,6 @@ socket.on('new_message', function (message) {
     });
 
     $('#messages').append(html);
-    
     scrollToBottom();
 });
 
@@ -84,7 +83,6 @@ $('#message-form').on('submit', function (e) {
 
     // Emit New Message To Server
     socket.emit('create_message', {
-        from: "User",
         text: input.val(),
         createdAt: new Date().getTime()
     }, function (data) {
@@ -102,7 +100,7 @@ $('#send-location').on('click', function () {
         socket.emit('create_location_message', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-        })
+        })  
         
     }, function (error) {
         console.log(error);

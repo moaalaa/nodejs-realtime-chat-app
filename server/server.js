@@ -42,7 +42,7 @@ io.on('connection', socket => {
             io.to(user.room).emit('update_users_list', users.getUsersList(user.room));
             io.to(user.room).emit('new_message', generateMessage('Admin', `${user.name} has left.`));
         }
-        
+
     });
 
 
@@ -90,7 +90,7 @@ io.on('connection', socket => {
         }
 
         // Broadcast To All Sockets
-        io.to(user.room).emit('new_message', generateMessage(message.from, message.text));
+        io.to(user.room).emit('new_message', generateMessage(user.name, message.text));
 
         // Event Acknowledgements for current socket only
         callback('This Is From Server.');
@@ -107,7 +107,7 @@ io.on('connection', socket => {
             return;
         }
 
-        io.to(user.room).emit('new_location_message', generateLocationMessage(message.from, coords.latitude, coords.longitude))
+        io.to(user.room).emit('new_location_message', generateLocationMessage(user.name, coords.latitude, coords.longitude))
     });
 
 
