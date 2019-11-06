@@ -6,6 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
+const {Users}= require('./utils/users');
 require('express-group-routes');
 
 // Public Path
@@ -17,6 +18,7 @@ const app = express();
 // Init Http Server For Socket.io
 const server = http.createServer(app);
 const io = socketIO(server);
+const users = new Users();
 
 // Set App Static Directory
 app.use(express.static(publicPath))
@@ -32,9 +34,16 @@ server.listen(port, () => console.log(`Server Started on Port ${port}`));
 
 // Socket.io Connections
 io.on('connection', socket => {
-    console.log('New Client Connected', socket.client.id);
-    
-    socket.on('disconnect', () => console.log("Client Disconnected", socket.client.id) );
+    socket.on('disconnect', () => {
+
+        const user = users.removeUser(socket.id);
+
+        if (user) {
+            io.to(user.room).emit('update_users_list', users.getUsersList(user.room));
+            io.to(user.room).emit('new_message', generateMessage('Admin', `${user.name} has left.`));
+        }
+        
+    });
 
 
     // Broadcast To All Sockets
@@ -48,17 +57,19 @@ io.on('connection', socket => {
 
     socket.on('join', (params, callback) => {
         if (! isRealString(params.name) || ! isRealString(params.room_name)) {
-            callback('name and room name are required');
+            return callback('name and room name are required');
         }
 
         // Join a room by default on connection "socket" join a "room" it's name be "socket" id
         socket.join(params.room_name);
-        
+        users.removeUser(socket.id);
+        users.createUser(socket.id, params.name, params.room_name);
+
         // Leave a room
         // socket.leave(params.room_name);
-
-
         
+        io.to(params.room_name).emit('update_users_list', users.getUsersList(params.room_name));
+
         // Broadcast To current socket in room
         socket.emit('new_message', generateMessage('Admin','Welcome To Chat App'));
 
@@ -72,8 +83,14 @@ io.on('connection', socket => {
     socket.on('create_message', (message, callback) => {
         console.log('Create Message', message);
         
+        const user = users.getUser(socket.id);
+
+        if (! user) {
+            return;
+        }
+
         // Broadcast To All Sockets
-        io.emit('new_message', generateMessage(message.from, message.text));
+        io.to(user.room).emit('new_message', generateMessage(message.from, message.text));
 
         // Event Acknowledgements for current socket only
         callback('This Is From Server.');
@@ -83,8 +100,15 @@ io.on('connection', socket => {
     });
 
     socket.on('create_location_message', coords => {
-        io.emit('new_location_message', generateLocationMessage("Alaa", coords.latitude, coords.longitude))
-    })
+
+        const user = users.getUser(socket.id);
+
+        if (! user) {
+            return;
+        }
+
+        io.to(user.room).emit('new_location_message', generateLocationMessage(message.from, coords.latitude, coords.longitude))
+    });
 
 
     // Emit / Broadcast Types

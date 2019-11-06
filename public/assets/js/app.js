@@ -40,6 +40,16 @@ socket.on('disconnect', function () {
     console.log('Disconnected From Server');
 });
 
+socket.on('update_users_list', function (users) {
+    const ol = $('<ol></ol>');
+
+    users.forEach(function (userName) {
+        ol.append(`<li>${userName}</li>`);
+    });
+
+    $('#users').html(ol);
+});
+
 // listen on new Message
 socket.on('new_message', function (message) {
     html = Mustache.render($('#message-template').html(), {
